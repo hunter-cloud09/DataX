@@ -19,7 +19,7 @@
         <fileSet>
             <directory>target/</directory>
             <includes>
-                <include>kingbaseeswriter-0.0.1-SNAPSHOT.jar</include>
+                <include>kingbaseeswriter-${revision}.jar</include>
             </includes>
             <outputDirectory>plugin/writer/kingbaseeswriter</outputDirectory>
         </fileSet>
@@ -32,11 +32,11 @@
         </fileSet>
     </fileSets>
 
-    <dependencySets>
-        <dependencySet>
-            <useProjectArtifact>false</useProjectArtifact>
-            <outputDirectory>plugin/writer/kingbaseeswriter/libs</outputDirectory>
-            <scope>runtime</scope>
-        </dependencySet>
-    </dependencySets>
+<!--    <dependencySets>-->
+<!--        <dependencySet>-->
+<!--            <useProjectArtifact>false</useProjectArtifact>-->
+<!--            <outputDirectory>plugin/writer/kingbaseeswriter/libs</outputDirectory>-->
+<!--            <scope>runtime</scope>-->
+<!--        </dependencySet>-->
+<!--    </dependencySets>-->
 </assembly>

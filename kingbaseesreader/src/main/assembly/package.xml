@@ -19,7 +19,7 @@
         <fileSet>
             <directory>target/</directory>
             <includes>
-                <include>kingbaseesreader-0.0.1-SNAPSHOT.jar</include>
+                <include>kingbaseesreader-${revision}.jar</include>
             </includes>
             <outputDirectory>plugin/reader/kingbaseesreader</outputDirectory>
         </fileSet>
@@ -32,11 +32,11 @@
         </fileSet>
     </fileSets>
 
-    <dependencySets>
-        <dependencySet>
-            <useProjectArtifact>false</useProjectArtifact>
-            <outputDirectory>plugin/reader/kingbaseesreader/libs</outputDirectory>
-            <scope>runtime</scope>
-        </dependencySet>
-    </dependencySets>
+<!--    <dependencySets>-->
+<!--        <dependencySet>-->
+<!--            <useProjectArtifact>false</useProjectArtifact>-->
+<!--            <outputDirectory>plugin/reader/kingbaseesreader/libs</outputDirectory>-->
+<!--            <scope>runtime</scope>-->
+<!--        </dependencySet>-->
+<!--    </dependencySets>-->
 </assembly>

@@ -4,9 +4,12 @@ import com.alibaba.datax.common.element.Column;
 import com.alibaba.datax.common.element.Record;
 import com.alibaba.datax.common.element.StringColumn;
 import com.alibaba.datax.common.exception.DataXException;
+import com.alibaba.datax.core.transport.transformer.strategy.*;
 import com.alibaba.datax.transformer.Transformer;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * no comments.
@@ -17,49 +20,57 @@ public class ReplaceTransformer extends Transformer {
         setTransformerName("dx_replace");
     }
 
+    //TODO 根据判断条件 将原来的字符串替换会为指定字符串
+    //TODO 直接改下面的代码 让在daas中使用这一个函数就行
+    //TODO 给三个参数 1、下标 2、方法 3、判断的值 4、替换的值
     @Override
     public Record evaluate(Record record, Object... paras) {
 
         int columnIndex;
-        int startIndex;
-        int length;
         String replaceString;
+        String method;
+        String sourceValue;
         try {
             if (paras.length != 4) {
                 throw new RuntimeException("dx_replace paras must be 4");
             }
 
             columnIndex = (Integer) paras[0];
-            startIndex = Integer.valueOf((String) paras[1]);
-            length = Integer.valueOf((String) paras[2]);
+            method = (String) paras[1];
+            sourceValue = (String) paras[2];
             replaceString = (String) paras[3];
         } catch (Exception e) {
             throw DataXException.asDataXException(TransformerErrorCode.TRANSFORMER_ILLEGAL_PARAMETER, "paras:" + Arrays.asList(paras).toString() + " => " + e.getMessage());
         }
 
         Column column = record.getColumn(columnIndex);
-
         try {
-            String oriValue = column.asString();
+            String newValue = null;
 
-            //如果字段为空，跳过replace处理
-            if(oriValue == null){
-                return  record;
+            Map<String, Strategy> strategyMap = new HashMap<>();
+            strategyMap.put("equals", new EqualsStrategy());
+            strategyMap.put("notEquals",new NotEqualsStrategy());
+            strategyMap.put("GR", new GRStrategy());
+            strategyMap.put("GRE", new GREStrategy());
+            strategyMap.put("LR", new LRStrategy());
+            strategyMap.put("LRE", new LREStrategy());
+            strategyMap.put("isNull",new IsNullStrategy());
+            strategyMap.put("isNotNull",new IsNotNullStrategy());
+            strategyMap.put("regex",new RegexStrategy());
+            strategyMap.put("isNullString",new IsNullStrategy());
+            strategyMap.put("isNotNullString",new IsNotNullStringStrategy());
+
+
+            Strategy strategy = strategyMap.get(method);
+            if (strategy != null && strategy.execute(column, sourceValue)) {
+                newValue = replaceString;
             }
-            String newValue;
-            if (startIndex > oriValue.length()) {
-                throw new RuntimeException(String.format("dx_replace startIndex(%s) out of range(%s)", startIndex, oriValue.length()));
-            }
-            if (startIndex + length >= oriValue.length()) {
-                newValue = oriValue.substring(0, startIndex) + replaceString;
-            } else {
-                newValue = oriValue.substring(0, startIndex) + replaceString + oriValue.substring(startIndex + length, oriValue.length());
-            }
+
 
             record.setColumn(columnIndex, new StringColumn(newValue));
 
         } catch (Exception e) {
-            throw DataXException.asDataXException(TransformerErrorCode.TRANSFORMER_RUN_EXCEPTION, e.getMessage(),e);
+            throw DataXException.asDataXException(TransformerErrorCode.TRANSFORMER_RUN_EXCEPTION, e.getMessage(), e);
         }
         return record;
     }
