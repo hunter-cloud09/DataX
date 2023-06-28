@@ -182,8 +182,10 @@ public class CommonRdbmsWriter {
         protected String jdbcUrl;
         protected String table;
         protected List<String> columns;
+        protected List<String> primarykeys;
         protected List<String> preSqls;
         protected List<String> postSqls;
+
         protected int batchSize;
         protected int batchByteSize;
         protected int columnNumber = 0;
@@ -225,6 +227,7 @@ public class CommonRdbmsWriter {
             this.table = writerSliceConfig.getString(Key.TABLE);
 
             this.columns = writerSliceConfig.getList(Key.COLUMN, String.class);
+            this.primarykeys = writerSliceConfig.getList(Key.PRIMARY_KEY, String.class);
             this.columnNumber = this.columns.size();
 
             this.preSqls = writerSliceConfig.getList(Key.PRE_SQL, String.class);
@@ -566,7 +569,7 @@ public class CommonRdbmsWriter {
                     forceUseUpdate = true;
                 }
 
-                INSERT_OR_REPLACE_TEMPLATE = WriterUtil.getWriteTemplate(columns, valueHolders, writeMode, dataBaseType, forceUseUpdate);
+                INSERT_OR_REPLACE_TEMPLATE = WriterUtil.getWriteTemplate(columns, valueHolders, writeMode, dataBaseType, forceUseUpdate, primarykeys);
                 writeRecordSql = String.format(INSERT_OR_REPLACE_TEMPLATE, this.table);
             }
         }

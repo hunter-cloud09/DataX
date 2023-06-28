@@ -108,7 +108,7 @@ public final class WriterUtil {
         }
     }
 
-    public static String getWriteTemplate(List<String> columnHolders, List<String> valueHolders, String writeMode, DataBaseType dataBaseType, boolean forceUseUpdate) {
+    public static String getWriteTemplate(List<String> columnHolders, List<String> valueHolders, String writeMode, DataBaseType dataBaseType, boolean forceUseUpdate, List<String> primarykeys) {
         boolean isWriteModeLegal = writeMode.trim().toLowerCase().startsWith("insert")
                 || writeMode.trim().toLowerCase().startsWith("replace")
                 || writeMode.trim().toLowerCase().startsWith("update");
@@ -130,6 +130,8 @@ public final class WriterUtil {
                     .append(")")
                     .append(onDuplicateKeyUpdateString(columnHolders))
                     .toString();
+        } else if (dataBaseType == DataBaseType.Oracle && primarykeys != null && !primarykeys.isEmpty()) {
+            writeDataSqlTemplate = onMergeIntoDoString(primarykeys, columnHolders, valueHolders);
         } else {
 
             //这里是保护,如果其他错误的使用了update,需要更换为replace
@@ -164,6 +166,40 @@ public final class WriterUtil {
             sb.append(")");
         }
 
+        return sb.toString();
+    }
+
+    public static String onMergeIntoDoString(List<String> primaryKeys, List<String> columnHolders, List<String> valueHolders) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("MERGE INTO %s A USING ( SELECT ");
+        StringBuilder str = new StringBuilder();
+        StringBuilder update = new StringBuilder();
+        StringBuilder insert = new StringBuilder();
+        columnHolders.stream().filter(primaryKeys::contains)
+                .forEach(columnHolder -> str.append("TMP.")
+                        .append(columnHolder)
+                        .append(" = A.")
+                        .append(columnHolder)
+                        .append("AND"));
+
+        for (int i = 0; i < columnHolders.size(); ++i) {
+            sb.append(valueHolders.get(i)).append(" AS ").append(columnHolders.get(i)).append(",");
+            insert.append("TMP.").append(columnHolders.get(i)).append(",");
+        }
+
+        columnHolders.stream().filter(columnHolder -> !primaryKeys.contains(columnHolder))
+                .forEach(columnHolder -> {
+                    update.append(columnHolder).append(" = TMP.")
+                            .append(columnHolder).append(",");
+                });
+        update.deleteCharAt(update.length()-1);
+        sb.deleteCharAt(sb.length()-1);
+        insert.deleteCharAt(insert.length()-1);
+        str.replace(update.length()-3,update.length(),"");
+        sb.append(" FROM DUAL ) TMP ON (").append(str).append(" ) WHEN MATCHED THEN UPDATE SET ")
+                .append(update).append(" WHEN NOT MATCHED THEN ").append("INSERT (")
+                .append(StringUtils.join(columnHolders,","))
+                .append(") VALUES(").append(insert).append(")");
         return sb.toString();
     }
 
