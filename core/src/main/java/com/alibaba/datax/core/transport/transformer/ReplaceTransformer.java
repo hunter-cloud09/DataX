@@ -22,30 +22,31 @@ public class ReplaceTransformer extends Transformer {
 
     //TODO 根据判断条件 将原来的字符串替换会为指定字符串
     //TODO 直接改下面的代码 让在daas中使用这一个函数就行
-    //TODO 给三个参数 1、下标 2、方法 3、判断的值 4、替换的值
+    //TODO 给三个参数 1、下标 2、方法 3、判断的值 4、替换的值 5、sink下标
     @Override
     public Record evaluate(Record record, Object... paras) {
 
         int columnIndex;
+        String sinkColumnIndex;
         String replaceString;
         String method;
         String sourceValue;
         try {
-            if (paras.length != 4) {
-                throw new RuntimeException("dx_replace paras must be 4");
+            if (paras.length != 5) {
+                throw new RuntimeException("dx_replace paras must be 5");
             }
 
             columnIndex = (Integer) paras[0];
             method = (String) paras[1];
             sourceValue = (String) paras[2];
             replaceString = (String) paras[3];
+            sinkColumnIndex = (String) paras[4];
         } catch (Exception e) {
             throw DataXException.asDataXException(TransformerErrorCode.TRANSFORMER_ILLEGAL_PARAMETER, "paras:" + Arrays.asList(paras).toString() + " => " + e.getMessage());
         }
 
         Column column = record.getColumn(columnIndex);
         try {
-            String newValue = null;
 
             Map<String, Strategy> strategyMap = new HashMap<>();
             strategyMap.put("equals", new EqualsStrategy());
@@ -63,11 +64,11 @@ public class ReplaceTransformer extends Transformer {
 
             Strategy strategy = strategyMap.get(method);
             if (strategy != null && strategy.execute(column, sourceValue)) {
-                newValue = replaceString;
+                column = new StringColumn(replaceString);
             }
 
 
-            record.setColumn(columnIndex, new StringColumn(newValue));
+            record.setColumn(Integer.parseInt(sinkColumnIndex), column);
 
         } catch (Exception e) {
             throw DataXException.asDataXException(TransformerErrorCode.TRANSFORMER_RUN_EXCEPTION, e.getMessage(), e);

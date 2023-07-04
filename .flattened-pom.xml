@@ -52,7 +52,7 @@
     <revision>1.0.0</revision>
     <jdk-version>1.8</jdk-version>
     <diamond.version>3.7.2.1-SNAPSHOT</diamond.version>
-    <mysql.driver.version>5.1.47</mysql.driver.version>
+    <mysql.driver.version>8.0.33</mysql.driver.version>
     <commons-configuration-version>1.10</commons-configuration-version>
     <commons-cli-version>1.2</commons-cli-version>
     <slf4j-api-version>1.7.10</slf4j-api-version>
