@@ -29,14 +29,18 @@ public class OracleWriter extends Writer {
 
 			// warn：not like mysql, oracle only support insert mode, don't use
 			String writeMode = this.originalConfig.getString(Key.WRITE_MODE);
-//			if (null != writeMode) {
-//				throw DataXException
-//						.asDataXException(
-//								DBUtilErrorCode.CONF_ERROR,
-//								String.format(
-//										"写入模式(writeMode)配置错误. 因为Oracle不支持配置项 writeMode: %s, Oracle只能使用insert sql 插入数据. 请检查您的配置并作出修改",
-//										writeMode));
-//			}
+			if (writeMode.trim().toLowerCase().startsWith("replace")
+					|| writeMode.trim().toLowerCase().startsWith("update")) {
+				List<String> primarykeys = this.originalConfig.getList(Key.PRIMARY_KEY, String.class);
+				if (primarykeys == null || primarykeys.isEmpty()) {
+					throw DataXException
+							.asDataXException(
+									DBUtilErrorCode.CONF_ERROR,
+									String.format(
+											"写入模式(writeMode)配置错误. 当Oracle writeMode为: %s 时, 必需指定primaryKey属性. 请检查您的配置并作出修改",
+											writeMode));
+				}
+			}
 
 			this.commonRdbmsWriterJob = new CommonRdbmsWriter.Job(
 					DATABASE_TYPE);

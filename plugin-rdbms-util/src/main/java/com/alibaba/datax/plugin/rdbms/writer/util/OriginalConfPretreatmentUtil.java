@@ -148,6 +148,7 @@ public final class OriginalConfPretreatmentUtil {
 
         // 默认为：insert 方式
         String writeMode = originalConfig.getString(Key.WRITE_MODE, "INSERT");
+        List<String> primaryKeys = originalConfig.getList(Key.PRIMARY_KEY,String.class);
 
         List<String> valueHolders = new ArrayList<String>(columns.size());
         for (int i = 0; i < columns.size(); i++) {
@@ -160,7 +161,7 @@ public final class OriginalConfPretreatmentUtil {
             forceUseUpdate = true;
         }
 
-        String writeDataSqlTemplate = WriterUtil.getWriteTemplate(columns, valueHolders, writeMode,dataBaseType, forceUseUpdate);
+        String writeDataSqlTemplate = WriterUtil.getWriteTemplate(columns, valueHolders, writeMode,dataBaseType, forceUseUpdate, primaryKeys);
 
         LOG.info("Write data [\n{}\n], which jdbcUrl like:[{}]", writeDataSqlTemplate, jdbcUrl);
 
