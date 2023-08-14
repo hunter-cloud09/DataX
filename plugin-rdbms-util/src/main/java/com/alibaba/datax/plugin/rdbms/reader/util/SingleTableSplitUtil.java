@@ -42,7 +42,7 @@ public class SingleTableSplitUtil {
         
         //String splitMode = configuration.getString(Key.SPLIT_MODE, "");
         //if (Constant.SPLIT_MODE_RANDOMSAMPLE.equals(splitMode) && DATABASE_TYPE == DataBaseType.Oracle) {
-        if (DATABASE_TYPE == DataBaseType.Oracle) {
+        if (DATABASE_TYPE == DataBaseType.Oracle || DATABASE_TYPE == DataBaseType.DM) {
             rangeList = genSplitSqlForOracle(splitPkName, table, where,
                     configuration, adviceNum);
             // warn: mysql etc to be added...

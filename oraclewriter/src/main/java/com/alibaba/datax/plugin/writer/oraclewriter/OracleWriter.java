@@ -7,6 +7,7 @@ import com.alibaba.datax.common.util.Configuration;
 import com.alibaba.datax.plugin.rdbms.util.DBUtilErrorCode;
 import com.alibaba.datax.plugin.rdbms.util.DataBaseType;
 import com.alibaba.datax.plugin.rdbms.writer.CommonRdbmsWriter;
+import com.alibaba.datax.plugin.rdbms.writer.Constant;
 import com.alibaba.datax.plugin.rdbms.writer.Key;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class OracleWriter extends Writer {
 			this.originalConfig = super.getPluginJobConf();
 
 			// warn：not like mysql, oracle only support insert mode, don't use
-			String writeMode = this.originalConfig.getString(Key.WRITE_MODE);
+			String writeMode = this.originalConfig.getString(Key.WRITE_MODE, Constant.INSERT);
 			if (writeMode.trim().toLowerCase().startsWith("replace")
 					|| writeMode.trim().toLowerCase().startsWith("update")) {
 				List<String> primarykeys = this.originalConfig.getList(Key.PRIMARY_KEY, String.class);

@@ -395,6 +395,12 @@ public final class DBUtil {
         }
     }
 
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+        Class.forName("dm.jdbc.driver.DmDriver");
+        Connection connection = DriverManager.getConnection("jdbc:dm://192.168.90.111:5236", "edw_data_eda", "Linkcld123456.");
+        connection.prepareStatement("select * from APP_DAS_TEST.TEST limit 1");
+    }
+
     /**
      * a wrapped method to execute select-like sql statement .
      *

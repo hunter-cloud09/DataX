@@ -120,7 +120,7 @@ public final class OriginalConfPretreatmentUtil {
                 originalConfig.set(String.format("%s[%d].%s",
                         Constant.CONN_MARK, i, Key.TABLE), expandedTables);
             } else {
-                // 说明是配置的 querySql 方式，不做处理.
+                // 说明是配置的 querySql 方式，不做处理.c
             }
         }
 

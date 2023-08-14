@@ -23,6 +23,8 @@
     <module>rdbmswriter</module>
     <module>streamwriter</module>
     <module>mongodbwriter</module>
+    <module>dmreader</module>
+    <module>dmwriter</module>
     <module>plugin-rdbms-util</module>
     <module>plugin-unstructured-storage-util</module>
   </modules>
@@ -104,6 +106,11 @@
             <artifactId>diamond-client</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.dameng</groupId>
+        <artifactId>DmJdbcDriver18</artifactId>
+        <version>${dm8-jdbc.version}</version>
       </dependency>
       <dependency>
         <groupId>com.taobao.diamond</groupId>

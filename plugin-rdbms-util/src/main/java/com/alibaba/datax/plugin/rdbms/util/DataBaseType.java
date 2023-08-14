@@ -22,6 +22,7 @@ public enum DataBaseType {
     ClickHouse("clickhouse", "ru.yandex.clickhouse.ClickHouseDriver"),
     KingbaseES("kingbasees", "com.kingbase8.Driver"),
     Oscar("oscar", "com.oscar.Driver"),
+    DM("dm","dm.jdbc.driver.DmDriver"),
     OceanBase("oceanbase", "com.alipay.oceanbase.jdbc.Driver");
 
 
@@ -43,6 +44,7 @@ public enum DataBaseType {
         switch (this) {
             case MySql:
             case DRDS:
+            case DM:
             case OceanBase:
                 suffix = "yearIsDateType=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&rewriteBatchedStatements=true";
                 if (jdbc.contains("?")) {
@@ -109,6 +111,8 @@ public enum DataBaseType {
             case KingbaseES:
                 break;
             case Oscar:
+                break;
+            case DM:
                 break;
             case OceanBase:
                 suffix = "yearIsDateType=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&rewriteBatchedStatements=true";

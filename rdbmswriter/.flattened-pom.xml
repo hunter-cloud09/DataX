@@ -24,11 +24,8 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.dm</groupId>
-      <artifactId>dm</artifactId>
-      <version>16</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/src/main/libs/Dm7JdbcDriver16.jar</systemPath>
+      <groupId>com.dameng</groupId>
+      <artifactId>DmJdbcDriver18</artifactId>
     </dependency>
     <dependency>
       <groupId>com.sybase</groupId>

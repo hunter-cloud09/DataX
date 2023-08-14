@@ -152,3 +152,5 @@ This software is free to use under the Apache License [Apache license](https://g
 
 
 
+打包方式：
+mvn -U clean package assembly:assembly -Dmaven.test.skip=true

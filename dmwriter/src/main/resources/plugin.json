@@ -1,0 +1,6 @@
+{
+    "name": "dmwriter",
+    "class": "com.linkcld.datax.plugin.writer.dmwriter.Dmwriter",
+    "description": "useScene: prod. mechanism: Jdbc connection using the database, execute select sql, retrieve data from the ResultSet. warn: The more you know about the database, the less problems you encounter.",
+    "developer": "hunter-cloud09"
+}
